@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+// Definition of User message
+message User {
+  string id = 1;         // Unique identifier for the user
+  string userName = 2;   // Username of the user
+}
+
+// Definition of Message message
+message Message {
+  User from = 1;         // User who sent the message
+  string msg = 2;        // Content of the message
+  uint64 time = 3;       // Timestamp of when the message was sent
+}
+
+// Definition of Response message
+message Response {
+  bool isOk = 1;         // Indicates if the operation was successful
+  int32 errorCode = 2;   // Error code if the operation failed
+  string message = 3;    // Additional information or error message
+}
+
+// Definition of UserList message
+message UserList {
+  repeated User users = 1;  // List of users
+}
+
+// Empty message used as placeholder
+message Empty {}
+
+// Definition of Chat service
+service Chat {
+  // Method to leave the chat
+  rpc leaveChat(User) returns (Response) {}
+
+  // Method to join the chat and continuously receive updates on users in the chat
+  rpc joinChat(User) returns (Response) {}
+
+  // Method to send a message
+  rpc sendMessage(Message) returns (Response) {}
+
+  // Method to continuously receive messages
+  rpc receiveMessages(User) returns (stream Message) {}
+
+  // Method to listen for updated user list in the chat room
+  rpc listenForUpdatedInChatRoom(User) returns (stream UserList) {}
+}
